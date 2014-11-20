@@ -20,7 +20,10 @@
 #include "RooGaussian.h"
 #include "RooAddPdf.h"
 #include "RooAbsPdf.h"
-#include <iostream>
+#include "RooAbsData.h"
+#include "RooDataHist.h"
+#include "RooPlot.h"
+#include "TCanvas.h"
 
 /**
    \class Pi0PdfMaker
@@ -37,18 +40,29 @@ class Pi0PdfMaker {
   /// Default destructor
   virtual ~Pi0PdfMaker(){};
 
-  RooAbsPdf* RadLenPdf(double xmin, double xmax, double lambda);
-
-  RooAbsPdf* dEdxPdf(int pdg);
+  // Radiation length PDF functions
+  void           RadLenPdf(double xmin, double xmax, double lambdamin, double lambdamax);
+  void           RadLenData(TH1* h);
+  void           RadLenFit();
+  void           RadLenPlot();
+  
+  // dEdx PDF functions
+  RooAbsPdf*     dEdxPdf(int pdg);
 
   /// Set "data" TTree
   void setTree(TTree *t) { tree = t; }
   
  private:
+  
+  // Radiation length PDF variables
+  RooRealVar*    RadLen_x;
+  RooRealVar*    RadLen_l;
+  RooAbsPdf*     RadLen_PDF;
+  RooAbsData*    RadLen_Data;
+  RooPlot*       RadLen_xframe;
 
   // TTree with data sets in branches
   TTree *tree;
-
   
 };
 

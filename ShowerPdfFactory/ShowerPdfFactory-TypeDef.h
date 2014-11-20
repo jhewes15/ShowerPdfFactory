@@ -6,15 +6,14 @@
 #define LARLITE_SHOWERPDFFACTORY_TYPEDEF_H
 
 // Header files included here
-#include "sample_ana.h"
 #include "Pi0PdfMaker.h"
+#include "Pi0Algo.h"
 //ADD_NEW_HEADER ... do not change this comment line
 
 // Class forward declaration here
 namespace larlite {
 
-  class sample_ana;
-
+  class Pi0Algo;
 //ADD_ANA_CLASS ... do not change this comment line
 
 }
@@ -22,3 +21,4 @@ namespace larlite {
 class Pi0PdfMaker;
 //ADD_EMPTY_CLASS ... do not change this comment line
 #endif
+
