@@ -16,5 +16,6 @@ rootlibmap() {
 
 ######################################################
 # ShowerPdfFactory
-rootlibmap libshower_pdf_factory_ShowerPdfFactory.rootmap libshower_pdf_factory_ShowerPdfFactory.so $LARLITE_USERDEVDIR/shower_pdf_factory/ShowerPdfFactory/LinkDef.h \
-    libLArLite_Analysis.so libRooFit.so
+rootlibmap libShowerPdfFactory_ShowerPdfFactory.rootmap libShowerPdfFactory_ShowerPdfFactory.so $LARLITE_USERDEVDIR/ShowerPdfFactory/ShowerPdfFactory/LinkDef.h \
+    libLArLite_Analysis.so \
+    libRooFit.so

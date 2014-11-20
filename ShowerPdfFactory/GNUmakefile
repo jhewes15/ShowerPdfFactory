@@ -4,7 +4,7 @@
 
 # specific names for this package
 DICT  = ShowerPdfFactoryCint
-SHLIB = libshower_pdf_factory_ShowerPdfFactory.so
+SHLIB = libShowerPdfFactory_ShowerPdfFactory.so
 SOURCES = $(filter-out $(DICT).cxx, $(wildcard *.cxx))
 FMWK_HEADERS = LinkDef.h $(DICT).h
 HEADERS = $(filter-out $(FMWK_HEADERS), $(wildcard *.h))
