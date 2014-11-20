@@ -42,8 +42,8 @@ namespace larlite {
     TCanvas* c;
     double x_min = 0;
     double x_max = 100;
-    double lambda_min = 10;
-    double lambda_max = 20;
+    double lambda_min = -0.05;
+    double lambda_max = -0.1;
     
   };
 }
