@@ -18,6 +18,7 @@
 #include "RooRealVar.h"
 #include "RooExponential.h"
 #include "RooGaussian.h"
+#include "RooGenericPdf.h"
 #include "RooAddPdf.h"
 #include "RooAbsPdf.h"
 #include "RooAbsData.h"
@@ -45,6 +46,12 @@ class Pi0PdfMaker {
   void           RadLenData(TH1* h);
   void           RadLenFit();
   void           RadLenPlot();
+
+  // Opening Angle vs. E PDF functions
+  void           EvsAnglePdf(double anglemin, double anglemax);
+  void           EvsAngleData(TH1* h);
+  void           EvsAngleFit();
+  void           EvsAnglePlot();
   
   // dEdx PDF functions
   RooAbsPdf*     dEdxPdf(int pdg);
@@ -60,6 +67,14 @@ class Pi0PdfMaker {
   RooAbsPdf*     RadLen_PDF;
   RooAbsData*    RadLen_Data;
   RooPlot*       RadLen_xframe;
+
+  // EvsAngle PDF variables
+  RooRealVar*       AngRange;
+  RooRealVar*       AngRes;
+  RooExponential*   EvsAng_PDF;
+  RooAbsData*       EvsAng_Data;
+  RooPlot*          EvsAng_frame;
+
 
   // TTree with data sets in branches
   TTree *tree;

@@ -34,6 +34,45 @@ void Pi0PdfMaker::RadLenPlot(){
 
 }
 
+
+// This PDF tries to use the relation between the energy of the two showers
+// in a Pi0 event and the opening angle between those showers
+// That relation is given by: M_pi0 = 2 * sqrt(E1*E2) * sin( ang/2 )
+// This PDF is the distribution Abs{2*arcsin[M/(2*sqrt(E1*E2))]-Ang}
+// for each Pi0 event. This distrib. is reasonably exponential
+void Pi0PdfMaker::EvsAnglePdf(double anglemin, double anglemax){
+
+  AngRange   = new RooRealVar("AngRange","Angle Range [rad]", anglemin, anglemax);
+  AngRes     = new RooRealVar("AngRes","Angle Resolution [rad]", anglemin, anglemax);
+  EvsAng_PDF = new RooExponential("EvsAng","Angular Resolution PDF", *AngRange, *AngRes);
+
+}
+
+void Pi0PdfMaker::EvsAngleData(TH1* h){
+  
+  EvsAng_Data =   new RooDataHist("data","Angle [rad]", RooArgSet(*AngRange), h);
+
+}
+
+void Pi0PdfMaker::EvsAngleFit(){
+  
+  EvsAng_PDF->fitTo(*EvsAng_Data);
+
+}
+
+void Pi0PdfMaker::EvsAnglePlot(){
+  
+  EvsAng_frame = AngRange->frame();
+  EvsAng_Data->plotOn(EvsAng_frame);
+  EvsAng_PDF->plotOn(EvsAng_frame);
+  TCanvas *c = new TCanvas("c","Opening Angle PDF",1000,500);
+  EvsAng_frame->Draw();
+  c->SaveAs("./radlenPDF.png");
+
+}
+
+
+
 RooAbsPdf* Pi0PdfMaker::dEdxPdf(int pdg){
   
   RooRealVar dedx("dEdx","dEdx [MeV/cm]",0,10);
