@@ -3,35 +3,47 @@
 
 #include "Pi0PdfMaker.h"
 
+/* PDF functions for shower conversion length */
+
+// Instantiate params & PDF //
 void Pi0PdfMaker::RadLenPdf(double xmin, double xmax, double lambdamin, double lambdamax){
 
-  RadLen_x =      new RooRealVar("x","Distance [cm]",xmin,xmax);
-  RadLen_l =      new RooRealVar("l","Radiation Length [cm]",lambdamin, lambdamax);
-  RadLen_PDF =    new RooExponential("expo","Radiation Length", *RadLen_x, *RadLen_l);
+  _RadLenx = new RooRealVar("_RadLenx","Distance [cm]",xmin,xmax);
+  _RadLenl = new RooRealVar("_RadLenl","Radiation Length [cm]",lambdamin, lambdamax);
+  _RadLenPDF = new RooExponential("_RadLenPDF","Radiation Length", *_RadLenx, *_RadLenl);
 
 }
 
-void Pi0PdfMaker::RadLenData(TH1* h){
+// Instantiate RooFit data holder & fit PDF //
+void Pi0PdfMaker::RadLenFit(TTree* t){
   
-  RadLen_Data =   new RooDataHist("data","Distance [cm]", RooArgSet(*RadLen_x), h);
+  _RadLenData = new RooDataSet("_RadLenData","Distance [cm]",RooArgSet(*_RadLenx),RooFit::Import(*t));
+  _RadLenPDF->fitTo(*_RadLenData);
 
 }
 
-void Pi0PdfMaker::RadLenFit(){
-  
-  RadLen_PDF->fitTo(*RadLen_Data);
-
-}
-
+// Plot PDF //
 void Pi0PdfMaker::RadLenPlot(){
   
-  RadLen_xframe = RadLen_x->frame();
-  RadLen_Data->plotOn(RadLen_xframe);
-  RadLen_PDF->plotOn(RadLen_xframe);
+  _RadLenframe = _RadLenx->frame();
+  _RadLenData->plotOn(_RadLenframe);
+  _RadLenPDF->plotOn(_RadLenframe);
   TCanvas *c = new TCanvas("c","Distance PDF",1000,500);
-  RadLen_xframe->Draw();
-  c->SaveAs("./radlenPDF.png");
+  _RadLenframe->Draw();
+  c->SaveAs("./PDF_RadLen.png");
 
+}
+
+// Integrate PDF //
+double Pi0PdfMaker::RadLenIntegrate(double range, double width){
+  
+  double min = range * (1 - width);
+  double max = range * (1 + width);
+  _RadLenx->setRange("xrange",min,max);
+  RooAbsReal* p_real = _RadLenPDF->createIntegral(RooArgSet(*_RadLenx),RooFit::NormSet(*_RadLenx),RooFit::Range("xrange"));
+  double p = p_real->getValV();
+  
+  return p;
 }
 
 
@@ -42,35 +54,40 @@ void Pi0PdfMaker::RadLenPlot(){
 // for each Pi0 event. This distrib. is reasonably exponential
 void Pi0PdfMaker::EvsAnglePdf(double anglemin, double anglemax){
 
-  AngRange   = new RooRealVar("AngRange","Angle Range [rad]", anglemin, anglemax);
-  AngRes     = new RooRealVar("AngRes","Angle Resolution [rad]", anglemin, anglemax);
-  EvsAng_PDF = new RooExponential("EvsAng","Angular Resolution PDF", *AngRange, *AngRes);
+  _EvsAngRange = new RooRealVar("_EvsAngRange","Angle Range [rad]", anglemin, anglemax);
+  _EvsAngRes   = new RooRealVar("_EvsAngRes","Angle Resolution [rad]", anglemin, anglemax);
+  _EvsAngPDF   = new RooExponential("_EvsAngPDF","Angular Resolution PDF", *_EvsAngRange, *_EvsAngRes);
 
 }
 
-void Pi0PdfMaker::EvsAngleData(TH1* h){
+void Pi0PdfMaker::EvsAngleFit(TTree* t){
   
-  EvsAng_Data =   new RooDataHist("data","Angle [rad]", RooArgSet(*AngRange), h);
-
-}
-
-void Pi0PdfMaker::EvsAngleFit(){
-  
-  EvsAng_PDF->fitTo(*EvsAng_Data);
+  _EvsAngData = new RooDataSet("_EvsAngData","Angle [rad]",RooArgSet(*_EvsAngRange),RooFit::Import(*t));
+  _EvsAngPDF->fitTo(*_EvsAngData);
 
 }
 
 void Pi0PdfMaker::EvsAnglePlot(){
   
-  EvsAng_frame = AngRange->frame();
-  EvsAng_Data->plotOn(EvsAng_frame);
-  EvsAng_PDF->plotOn(EvsAng_frame);
+  _EvsAngframe = _EvsAngRange->frame();
+  _EvsAngData->plotOn(_EvsAngframe);
+  _EvsAngPDF->plotOn(_EvsAngframe);
   TCanvas *c = new TCanvas("c","Opening Angle PDF",1000,500);
-  EvsAng_frame->Draw();
-  c->SaveAs("./radlenPDF.png");
+  _EvsAngframe->Draw();
+  c->SaveAs("./PDF_EvsAng.png");
 
 }
 
+double Pi0PdfMaker::EvsAngleIntegrate(double range, double width){
+  
+  double min = range * (1 - width);
+  double max = range * (1 + width);
+  _EvsAngRange->setRange("xrange",min,max);
+  RooAbsReal* p_real = _EvsAngPDF->createIntegral(RooArgSet(*_EvsAngRange),RooFit::NormSet(*_EvsAngRange),RooFit::Range("xrange"));
+  double p = p_real->getValV();
+  
+  return p;
+}
 
 
 RooAbsPdf* Pi0PdfMaker::dEdxPdf(int pdg){

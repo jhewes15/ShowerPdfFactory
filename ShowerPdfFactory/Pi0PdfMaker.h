@@ -43,15 +43,15 @@ class Pi0PdfMaker {
 
   // Radiation length PDF functions
   void           RadLenPdf(double xmin, double xmax, double lambdamin, double lambdamax);
-  void           RadLenData(TH1* h);
-  void           RadLenFit();
+  void           RadLenFit(TTree* t);
   void           RadLenPlot();
+  double         RadLenIntegrate(double range,double width);
 
   // Opening Angle vs. E PDF functions
   void           EvsAnglePdf(double anglemin, double anglemax);
-  void           EvsAngleData(TH1* h);
-  void           EvsAngleFit();
+  void           EvsAngleFit(TTree* t);
   void           EvsAnglePlot();
+  double         EvsAngIntegrate(double range, double width);
   
   // dEdx PDF functions
   RooAbsPdf*     dEdxPdf(int pdg);
@@ -62,18 +62,18 @@ class Pi0PdfMaker {
  private:
   
   // Radiation length PDF variables
-  RooRealVar*    RadLen_x;
-  RooRealVar*    RadLen_l;
-  RooAbsPdf*     RadLen_PDF;
-  RooAbsData*    RadLen_Data;
-  RooPlot*       RadLen_xframe;
+  RooRealVar*    _RadLenx;
+  RooRealVar*    _RadLenl;
+  RooAbsPdf*     _RadLenPDF;
+  RooAbsData*    _RadLenData;
+  RooPlot*       _RadLenframe;
 
   // EvsAngle PDF variables
-  RooRealVar*       AngRange;
-  RooRealVar*       AngRes;
-  RooExponential*   EvsAng_PDF;
-  RooAbsData*       EvsAng_Data;
-  RooPlot*          EvsAng_frame;
+  RooRealVar*       _EvsAngRange;
+  RooRealVar*       _EvsAngRes;
+  RooExponential*   _EvsAngPDF;
+  RooAbsData*       _EvsAngData;
+  RooPlot*          _EvsAngframe;
 
 
   // TTree with data sets in branches
